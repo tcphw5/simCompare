@@ -11,9 +11,55 @@ public class simCompare {
   public static void main(String[] args) {
 
     try {
-    File file = new File("people.txt");
+    File file = new File("gendPpl.txt");
     Scanner input = new Scanner(file);
 
+    //Creating static constant meaning tree
+
+    semtreeNode root = new semtreeNode("root");
+
+    semtreeNode c1d1 = new semtreeNode("home");
+    semtreeNode c2d1 = new semtreeNode("Food");
+    semtreeNode c3d1 = new semtreeNode("Outdoor activity");
+    semtreeNode c4d1 = new semtreeNode("School");
+    semtreeNode c5d1 = new semtreeNode("store");
+
+    semtreeNode c1d2 = new semtreeNode("McDon");
+    semtreeNode c2d2 = new semtreeNode("DQ");
+    semtreeNode c3d2 = new semtreeNode("TacoBell");
+    semtreeNode c4d2 = new semtreeNode("Park");
+    semtreeNode c5d2 = new semtreeNode("Trail");
+    semtreeNode c6d2 = new semtreeNode("RollaHigh");
+    semtreeNode c7d2 = new semtreeNode("MST");
+    semtreeNode c8d2 = new semtreeNode("walmart");
+    semtreeNode c9d2 = new semtreeNode("Kmart");
+    semtreeNode c10d2 = new semtreeNode("foodstores");
+
+    semtreeNode c1d3 = new semtreeNode("aldi");
+    semtreeNode c2d3 = new semtreeNode("kroger");
+
+    root.addChild(c1d1);
+    root.addChild(c2d1);
+    root.addChild(c3d1);
+    root.addChild(c4d1);
+    root.addChild(c5d1);
+
+    c2d1.addChild(c1d2);
+    c2d1.addChild(c2d2);
+    c2d1.addChild(c3d2);
+    c3d1.addChild(c4d2);
+    c3d1.addChild(c5d2);
+    c4d1.addChild(c6d2);
+    c4d1.addChild(c7d2);
+    c5d1.addChild(c8d2);
+    c5d1.addChild(c9d2);
+    c5d1.addChild(c10d2);
+
+    c10d2.addChild(c1d3);
+    c10d2.addChild(c2d3);
+
+
+    //READING IN DATA
 
     while(input.hasNextInt()) {
       int linelen = input.nextInt();
@@ -37,8 +83,8 @@ public class simCompare {
         t2[i] = input.nextDouble();
       }
 
-    //2 different test sequences
-
+    //outputting 2 different test sequences
+      System.out.println("person1 locations&staytimes");
     for(int i = 0; i < p1.length; i++) {
       System.out.print(p1[i] + " ");
     }
@@ -48,6 +94,8 @@ public class simCompare {
       System.out.print(t1[i] + " ");
     }
     System.out.println();
+
+    System.out.println("person2 location&staytimes");
 
     for(int i = 0; i < p2.length; i++) {
       System.out.print(p2[i] + " ");
@@ -74,8 +122,6 @@ public class simCompare {
           int[] current = {0,0,0};
           current[0] = i;
           current[1] = j;
-          System.out.print(current[0] + " ");
-          System.out.println(current[1]);
           matches.add(current);
         }
       }
@@ -86,7 +132,8 @@ public class simCompare {
 
 
     //printing out list of matches for testing
-    System.out.println(matches.size());
+    System.out.println("number of matches: " + matches.size());
+    System.out.println("Indexes of matches");
     for (int i=0; i < matches.size(); i++) {
       System.out.print(matches.get(i)[0] + " ");
       System.out.println(matches.get(i)[1]);
