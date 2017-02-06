@@ -19,8 +19,6 @@ public class generatePeople {
       PrintWriter writer = new PrintWriter("gendPpl.txt");
       Random rand = new Random();
 
-      //generates NUMOFPPL entries and outputs them to a text file "gendPpl.txt"
-
       for(int j=0; j<NUMOFPPL; j++) {
         int numOfPlaces = rand.nextInt(MAXPLACES-MINPLACES + 1) + MINPLACES;
         int numOfTimes = numOfPlaces*2 -1;
@@ -47,11 +45,10 @@ public class generatePeople {
           double halfhour = rand.nextDouble();
           int istayTime = rand.nextInt(MAXSTAYTIME-MINSTAYTIME + 1) + MINSTAYTIME;
           int itravTime = rand.nextInt(MAXSTAYTIME-MINSTAYTIME + 1) + MINSTAYTIME;
-          //50% of time will add a half hour to the time
           stayTime = (halfhour>0.5) ? istayTime + 0.5 : (double)istayTime;
           travTime = (halfhour>0.5) ? itravTime + 0.5 : (double)itravTime;
           if (i == 0) {
-              //do nothing
+              //do nothin
           } else {
             writer.print(stayTime + " ");
           }

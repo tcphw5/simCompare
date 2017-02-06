@@ -4,107 +4,16 @@ import java.io.File;
 import java.util.Scanner;
 import java.lang.Math;
 
-
-@SuppressWarnings("unchecked")
 public class simCompare {
 
   final static double MAX_DIF = 0.2;
 
-  public static void maximumMatch(int[][] commonLoc, int srow, int scol) {
-    if(outDeg(commonLoc, srow)) {
-      //System.out.print("start");
-      System.out.print(srow+1);
-      System.out.println("end");
-      return;
-    }
-    for(int i=scol; i > -1; i--) {
-      if(commonLoc[srow][i] == 1) {
-        System.out.print((srow+1) + "(");
-        maximumMatch(commonLoc, i, i /*can b i-1*/);
-        //System.out.print(srow+1);
-      }
-    }
-
-    return;
-  }
-
-  public static boolean outDeg(int[][] commonLoc, int srow) {
-    int total = 0;
-    for(int i=0; i<commonLoc[0].length; i++) {
-      total += commonLoc[srow][i];
-    }
-
-    if(total==0)
-      return true;
-
-    return false;
-  }
-
-  public static boolean precTest(ArrayList<int[]> matches, int l, int t, double[] t1, double[] t2) {
-    double total1 = 0;
-    double total2 = 0;
-    double travDif = 0;
-
-    if(matches.get(l)[0] <= matches.get(t)[0] && matches.get(l)[1] < matches.get(t)[1]) {
-      for(int i =(matches.get(l)[0] * 2) + 1; i < (matches.get(t)[0] * 2); i++) {
-        total1 += t1[i];
-      }
-      for(int i =(matches.get(l)[1] * 2) + 1; i < (matches.get(t)[1] * 2); i++) {
-        total2 += t2[i];
-      }
-
-      travDif = Math.abs(total1-total2)/(Math.max(total1, total2));
-      //System.out.println("dif" + travDif);
-      if( travDif <= MAX_DIF) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public static void main(String[] args) {
 
     try {
-    File file = new File("gendPpl.txt");
+    File file = new File("people.txt");
     Scanner input = new Scanner(file);
 
-    IntegerBTree tree = new IntegerBTree();
-
-    BTree<Integer, String> tree2 = new BTree();
-
-    tree2.insert(1,"one");
-    tree2.insert(2,"two");
-    tree2.insert(3,"three");
-    tree2.insert(4,"four");
-    tree2.insert(5,"five");
-    tree2.insert(6,"six");
-    tree2.insert(7,"seven");
-    tree2.insert(8,"eight");
-    tree2.insert(9,"nine");
-    tree2.insert(10,"ten");
-
-
-    tree.insert(1);
-    tree.insert(2);
-    tree.insert(3);
-    tree.insert(4);
-    tree.insert(5);
-    tree.insert(6);
-    tree.insert(7);
-    tree.insert(8);
-    tree.insert(9);
-    tree.insert(10);
-
-    BTreeNode tn1 = tree2.findLeafNodeShouldContainKey(1);
-    System.out.println(tree2.root.getValue(1));
-
-    //System.out.println(tree.search(2));
-    //System.out.println(tree2.search(2));
-
-
-
-
-    /**********************UNCOMMENT FOR TREE TESTING
 
     while(input.hasNextInt()) {
       int linelen = input.nextInt();
@@ -153,8 +62,6 @@ public class simCompare {
 
     //list of matches (nodes for graphs)
     ArrayList<int[]> matches = new ArrayList<int[]>();
-
-
 
     //checks for matches between them
     //adds matches to list i=index of match in p1
@@ -228,13 +135,63 @@ public class simCompare {
     //finding max match
     maximumMatch(commonLoc, commonLoc[0].length-1, commonLoc[0].length-1);
     System.out.println();
-
-  }*/
+    }
     input.close();
   } catch (Exception ex) {
     ex.printStackTrace();
   }
 
+  }
 
+  public static void maximumMatch(int[][] commonLoc, int srow, int scol) {
+    if(outDeg(commonLoc, srow)) {
+      //System.out.print("start");
+      System.out.print(srow+1);
+      System.out.println("end");
+      return;
+    }
+    for(int i=scol; i > -1; i--) {
+      if(commonLoc[srow][i] == 1) {
+        System.out.print((srow+1) + "(");
+        maximumMatch(commonLoc, i, i /*can b i-1*/);
+        //System.out.print(srow+1);
+      }
+    }
+
+    return;
+  }
+
+  public static boolean outDeg(int[][] commonLoc, int srow) {
+    int total = 0;
+    for(int i=0; i<commonLoc[0].length; i++) {
+      total += commonLoc[srow][i];
+    }
+
+    if(total==0)
+      return true;
+
+    return false;
+  }
+
+  public static boolean precTest(ArrayList<int[]> matches, int l, int t, double[] t1, double[] t2) {
+    double total1 = 0;
+    double total2 = 0;
+    double travDif = 0;
+
+    if(matches.get(l)[0] <= matches.get(t)[0] && matches.get(l)[1] < matches.get(t)[1]) {
+      for(int i =(matches.get(l)[0] * 2) + 1; i < (matches.get(t)[0] * 2); i++) {
+        total1 += t1[i];
+      }
+      for(int i =(matches.get(l)[1] * 2) + 1; i < (matches.get(t)[1] * 2); i++) {
+        total2 += t2[i];
+      }
+
+      travDif = Math.abs(total1-total2)/(Math.max(total1, total2));
+      //System.out.println("dif" + travDif);
+      if( travDif <= MAX_DIF) {
+        return true;
+      }
+    }
+    return false;
   }
 }
