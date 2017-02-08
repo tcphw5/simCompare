@@ -11,6 +11,7 @@ public class simCompare {
   public static void main(String[] args) {
 
     try {
+    long starttime = System.nanoTime();
     File file = new File("gendPpl.txt");
     Scanner input =  new Scanner(file);
     int lvl=2;
@@ -144,6 +145,9 @@ public class simCompare {
 
     //list of matches (nodes for graphs)
     //for each layer of semantic meaning
+
+    long stime2 = System.nanoTime();
+
     for (int m=0; m < lvl; m++) {
         System.out.println("LEVEL " + (lvl-m));
         if(m==1) {
@@ -197,6 +201,10 @@ public class simCompare {
         }
 
         //create adjacency matrix to store graph
+        if(matches.size() == 0) {
+          int[] fakedata = {0,0,0};
+          matches.add(fakedata);
+        }
         int[][] commonLoc = new int[matches.size()][matches.size()];
 
 
@@ -241,10 +249,19 @@ public class simCompare {
         System.out.println();
 
         }
+
+
+        if(!input.hasNextInt()) {
+          long endtime2 = System.nanoTime();
+          System.out.println("excluding IO: " + ((endtime2 - stime2)/1000000) );
+        }
       }
 
-
     input.close();
+    long endtime = System.nanoTime();
+
+    System.out.println("entire program: " + ((endtime - starttime)/1000000));
+
   } catch (Exception ex) {
     ex.printStackTrace();
   }
