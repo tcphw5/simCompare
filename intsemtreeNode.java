@@ -53,4 +53,6 @@ public class intsemtreeNode {
   public intsemtreeNode getParent () {
     return parent;
   }
+
+  //TODO implement search function based on given value
 }

@@ -13,7 +13,7 @@ public class simCompare {
     try {
     File file = new File("gendPpl.txt");
     Scanner input =  new Scanner(file);
-    int lvl;
+    int lvl=2;
 
     intsemtreeNode root = new intsemtreeNode(10);
 
@@ -135,82 +135,115 @@ public class simCompare {
     }
     System.out.println();
 
+    int[] shiftp1 = new int[p1.length];
+    int[] shiftp2 = new int[p2.length];
+
+
+
+
 
     //list of matches (nodes for graphs)
-    ArrayList<int[]> matches = new ArrayList<int[]>();
+    //for each layer of semantic meaning
+    for (int m=0; m < lvl; m++) {
+        System.out.println("LEVEL " + (lvl-m));
+        if(m==1) {
+          p1 = levelShift(p1);
+          p2 = levelShift(p2);
 
-    //checks for matches between them
-    //adds matches to list i=index of match in p1
-    //                     j=index of match in p2
-    //third zero in current sets the node as white
+          System.out.println("shiftedPerson1:");
 
-    for (int i=0; i < p1.length; i++) {
-      for (int j=0; j < p2.length; j++) {
-        if(p1[i] == p2[j]) {
-          int[] current = {0,0,0};
-          current[0] = i;
-          current[1] = j;
-          matches.add(current);
+          for (int i=0; i < shiftp1.length; i++) {
+            System.out.println(p1[i]);
+          }
+
+          System.out.println("shiftedPerson2:");
+
+          for (int i=0; i < shiftp2.length; i++) {
+            System.out.println(p2[i]);
+          }
+
         }
-      }
-    }
-
-    //put in decreasing lexigraphical order
-    Collections.reverse(matches);
 
 
-    //printing out list of matches for testing
-    System.out.println("number of matches: " + matches.size());
-    System.out.println("Indexes of matches");
-    for (int i=0; i < matches.size(); i++) {
-      System.out.print(matches.get(i)[0] + " ");
-      System.out.println(matches.get(i)[1]);
-    }
 
-    //create adjacency matrix to store graph
-    int[][] commonLoc = new int[matches.size()][matches.size()];
+        ArrayList<int[]> matches = new ArrayList<int[]>();
 
+        //checks for matches between them
+        //adds matches to list i=index of match in p1
+        //                     j=index of match in p2
+        //third zero in current sets the node as white
 
-    //builds graph and blacks out nodes
-    //
-
-    for (int l = 1; l < matches.size(); l++) {
-      for (int t=l-1; t > -1; t--) {
-        if (matches.get(l)[2] == 0) {
-          if (precTest(matches, l, t, t1, t2)) {
-            if(commonLoc[l][t] != -1) {
-                commonLoc[l][t] = 1;
+        for (int i=0; i < p1.length; i++) {
+          for (int j=0; j < p2.length; j++) {
+            if(p1[i] == p2[j]) {
+              int[] current = {0,0,0};
+              current[0] = i;
+              current[1] = j;
+              matches.add(current);
             }
-            for (int i=0; i < matches.size(); i++) {
-              if(commonLoc[t][i] == 1) {
-                matches.get(i)[2] = -1;
+          }
+        }
+
+        //put in decreasing lexigraphical order
+        Collections.reverse(matches);
+
+
+        //printing out list of matches for testing
+        System.out.println("number of matches: " + matches.size());
+        System.out.println("Indexes of matches");
+        for (int i=0; i < matches.size(); i++) {
+          System.out.print(matches.get(i)[0] + " ");
+          System.out.println(matches.get(i)[1]);
+        }
+
+        //create adjacency matrix to store graph
+        int[][] commonLoc = new int[matches.size()][matches.size()];
+
+
+        //builds graph and blacks out nodes
+        //
+
+        for (int l = 1; l < matches.size(); l++) {
+          for (int t=l-1; t > -1; t--) {
+            if (matches.get(l)[2] == 0) {
+              if (precTest(matches, l, t, t1, t2)) {
+                if(commonLoc[l][t] != -1) {
+                    commonLoc[l][t] = 1;
+                }
+                for (int i=0; i < matches.size(); i++) {
+                  if(commonLoc[t][i] == 1) {
+                    matches.get(i)[2] = -1;
+                  }
+                }
               }
             }
           }
         }
+
+
+        //prints out the adjacency matrix
+
+        System.out.println("//////////////////");
+        System.out.print("   ");
+        for (int i=0; i < matches.size(); i++)
+          System.out.print((i+1) + " ");
+        System.out.println();
+        for (int i=0; i < matches.size(); i++) {
+          System.out.print((i+1) + " " + (i < 9 ? " " : ""));
+          for (int j=0; j < matches.size() ;j++ ) {
+            System.out.print(commonLoc[i][j] + " ");
+          }
+          System.out.println();
+        }
+
+        //finding max match
+        maximumMatch(commonLoc, commonLoc[0].length-1, commonLoc[0].length-1);
+        System.out.println();
+
+        }
       }
-    }
 
 
-    //prints out the adjacency matrix
-
-    System.out.println("//////////////////");
-    System.out.print("   ");
-    for (int i=0; i < matches.size(); i++)
-      System.out.print((i+1) + " ");
-    System.out.println();
-    for (int i=0; i < matches.size(); i++) {
-      System.out.print((i+1) + " " + (i < 9 ? " " : ""));
-      for (int j=0; j < matches.size() ;j++ ) {
-        System.out.print(commonLoc[i][j] + " ");
-      }
-      System.out.println();
-    }
-
-    //finding max match
-    maximumMatch(commonLoc, commonLoc[0].length-1, commonLoc[0].length-1);
-    System.out.println();
-    }
     input.close();
   } catch (Exception ex) {
     ex.printStackTrace();
@@ -237,7 +270,25 @@ public class simCompare {
   }
 
   public static int weightFunc(int lvl) {
-    return Math.pow(2,(lvl-1);
+    return (int) Math.pow(2,(lvl-1));
+  }
+
+  //currently hard coded. Need to implement a search by value in tree
+
+  public static int[] levelShift(int[] ogPers) {
+    int[] shiftPers = new int[ogPers.length];
+
+    for (int i=0; i < ogPers.length; i++) {
+      if(ogPers[i] == 1 || ogPers[i] == 2 || ogPers[i] == 3) {
+        shiftPers[i] = 11;
+      }
+
+      if(ogPers[i] == 4 || ogPers[i] == 5) {
+        shiftPers[i] = 12;
+      }
+    }
+
+    return shiftPers;
   }
 
   public static boolean outDeg(int[][] commonLoc, int srow) {
