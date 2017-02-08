@@ -9,7 +9,7 @@ public class generatePeople {
   final static int MINPLACES = 4;
   final static int MAXPLACES = 7;
   final static int MINPLACEID = 1;
-  final static int MAXPLACEID = 10;
+  final static int MAXPLACEID = 5;
   final static int MINSTAYTIME = 1;
   final static int MAXSTAYTIME = 5;
   final static int NUMOFPPL = 10; //must be even

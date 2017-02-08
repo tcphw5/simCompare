@@ -12,10 +12,38 @@ public class simCompare {
 
     try {
     File file = new File("gendPpl.txt");
-    Scanner input = new Scanner(file);
+    Scanner input =  new Scanner(file);
+    int lvl;
 
+    intsemtreeNode root = new intsemtreeNode(10);
+
+    intsemtreeNode c1d1 = new intsemtreeNode(11); //food
+    intsemtreeNode c2d1 = new intsemtreeNode(12); //activity
+
+    intsemtreeNode c1d2 = new intsemtreeNode(1); //McDon
+    intsemtreeNode c2d2 = new intsemtreeNode(2); //TacoBell
+    intsemtreeNode c3d2 = new intsemtreeNode(3); //DQ
+    intsemtreeNode c4d2 = new intsemtreeNode(4); //park
+    intsemtreeNode c5d2 = new intsemtreeNode(5); //trail
+
+
+    root.addChild(c1d1);
+    root.addChild(c2d1);
+
+    c1d1.addChild(c1d2);
+    c1d1.addChild(c2d2);
+    c1d1.addChild(c3d2);
+
+    c2d1.addChild(c4d2);
+    c2d1.addChild(c5d2);
+
+    weightFunc(lvl);
+
+
+    //possible string tree.
+    //for now implemented with int tree representing strings
     //Creating static constant meaning tree
-
+    /*
     semtreeNode root = new semtreeNode("root");
 
     semtreeNode c1d1 = new semtreeNode("home");
@@ -57,7 +85,7 @@ public class simCompare {
 
     c10d2.addChild(c1d3);
     c10d2.addChild(c2d3);
-
+    */
 
     //READING IN DATA
 
@@ -206,6 +234,10 @@ public class simCompare {
     }
 
     return;
+  }
+
+  public static int weightFunc(int lvl) {
+    return Math.pow(2,(lvl-1);
   }
 
   public static boolean outDeg(int[][] commonLoc, int srow) {
