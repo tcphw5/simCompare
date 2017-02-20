@@ -12,7 +12,7 @@ public class generatePeople {
   final static int MAXPLACEID = 5;
   final static int MINSTAYTIME = 1;
   final static int MAXSTAYTIME = 5;
-  final static int NUMOFPPL = 250000; //must be even
+  final static int NUMOFPPL = 10; //must be even
 
   public static void main(String[] args) {
     try{

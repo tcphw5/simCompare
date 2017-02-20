@@ -15,6 +15,8 @@ public class simCompare {
     File file = new File("gendPpl.txt");
     Scanner input =  new Scanner(file);
     int lvl=2;
+    double simsqscore=0;
+    double simUser = 0;
 
     intsemtreeNode root = new intsemtreeNode(10);
 
@@ -171,7 +173,8 @@ public class simCompare {
 
 
         ArrayList<int[]> matches = new ArrayList<int[]>();
-
+        ArrayList<ArrayList<Integer>> maxMatches = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> eachMatch = new ArrayList<Integer>();
         //checks for matches between them
         //adds matches to list i=index of match in p1
         //                     j=index of match in p2
@@ -245,11 +248,38 @@ public class simCompare {
         }
 
         //finding max match
-        maximumMatch(commonLoc, commonLoc[0].length-1, commonLoc[0].length-1);
+        maximumMatch(commonLoc, commonLoc[0].length-1, commonLoc[0].length-1, maxMatches, eachMatch);
         System.out.println();
+
+        /*for (int i=0; i < maxMatches.size(); i++) {
+          System.out.print(maxMatches.get())
+        }*/
+
+
+
+        if(maxMatches.size() > 1) {
+          int totalsize = 0;
+          for (int j=1; j < maxMatches.size(); j++) {
+            totalsize += maxMatches.get(j-1).size();
+            for (int i=0; i < totalsize;i++) {
+              maxMatches.get(j).remove(0);
+            }
+          }
+        }
+
+        System.out.println(maxMatches);
+
+        double sgscore = 0;
+
+        sgscore = simScore(maxMatches);
+
+        simsqscore = sgscore / (double)(p1.length * p2.length);
+
+        simUser += weightFunc(lvl-m) * simsqscore;
 
         }
 
+        System.out.println(simUser);
 
         if(!input.hasNextInt()) {
           long endtime2 = System.nanoTime();
@@ -268,20 +298,42 @@ public class simCompare {
 
   }
 
-  public static void maximumMatch(int[][] commonLoc, int srow, int scol) {
+  public static double simScore(ArrayList<ArrayList<Integer>> maxMatches) {
+    int score = 0;
+    //eq 4 in paper
+    for (int i=0; i < maxMatches.size(); i++) {
+      score += weightFunc(maxMatches.get(i).size());
+    }
+
+    //eq3
+
+    //score = score / (p1.length * p2.length);
+
+
+
+    return score;
+  }
+
+  public static void maximumMatch(int[][] commonLoc, int srow, int scol, ArrayList<ArrayList<Integer>> maxMatches, ArrayList<Integer> eachMatch) {
     if(outDeg(commonLoc, srow)) {
       //System.out.print("start");
+      eachMatch.add(srow+1);
       System.out.print(srow+1);
       System.out.println("end");
+      eachMatch = new ArrayList<Integer>(eachMatch);
+      maxMatches.add(eachMatch);
       return;
     }
     for(int i=scol; i > -1; i--) {
       if(commonLoc[srow][i] == 1) {
+        eachMatch.add(srow+1);
         System.out.print((srow+1) + "(");
-        maximumMatch(commonLoc, i, i /*can b i-1*/);
+        maximumMatch(commonLoc, i, i /*can b i-1*/, maxMatches, eachMatch);
         //System.out.print(srow+1);
       }
     }
+
+
 
     return;
   }
