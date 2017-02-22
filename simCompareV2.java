@@ -1,154 +1,123 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 import java.io.File;
 import java.util.Scanner;
 import java.lang.Math;
 
-public class simCompare {
+public class simCompareV2 {
 
   final static double MAX_DIF = 0.2;
 
   public static void main(String[] args) {
 
     try {
-    long starttime = System.nanoTime();
-    File file = new File("gendPpl.txt");
-    Scanner input =  new Scanner(file);
-    int lvl=2;
+      long starttime = System.nanoTime();
+      File file = new File("gendPpl.txt");
+      Scanner input =  new Scanner(file);
+      ArrayList<double[]> trajectories = new ArrayList<double[]>();
+      ArrayList<Double[]> scores = new ArrayList<Double[]>();
+      double simUser = 0;
+      int lvl=2;
+
+      //READING IN DATA
+
+      while(input.hasNextInt()) {
+          int linelen = input.nextInt();
+          double[] p1 = new double[linelen];
+          for(int i = 0; i < linelen; i++) {
+            p1[i] = input.nextInt();
+          }
+          int linelen2 = input.nextInt();
+          double[] t1 = new double[linelen2];
+          for(int i = 0; i < linelen2; i++) {
+            t1[i] = input.nextDouble();
+          }
+          /*
+          int linelen3 = input.nextInt();
+          int[] p2 = new int[linelen3];
+          for(int i = 0; i < linelen3; i++) {
+            p2[i] = input.nextInt();
+          }
+          int linelen4 = input.nextInt();
+          double[] t2 = new double[linelen4];
+          for(int i = 0; i < linelen4; i++) {
+            t2[i] = input.nextDouble();
+          }*/
+
+          //outputting 2 different test sequences
+          System.out.println("person1 locations&staytimes");
+          for(int i = 0; i < p1.length; i++) {
+            System.out.print(p1[i] + " ");
+          }
+          System.out.println();
+
+          for(int i = 0; i < t1.length; i++) {
+            System.out.print(t1[i] + " ");
+          }
+          System.out.println();
+          /*
+          System.out.println("person2 location&staytimes");
+
+          for(int i = 0; i < p2.length; i++) {
+              System.out.print(p2[i] + " ");
+          }
+          System.out.println();
+
+          for(int i = 0; i < t2.length; i++) {
+            System.out.print(t2[i] + " ");
+          }
+          System.out.println();
+          */
+          trajectories.add(p1);
+          trajectories.add(t1);
+
+
+          //simUser = simScorePair(p1, t1, p2, t2, lvl);
+
+          //list of matches (nodes for graphs)
+          //for each layer of semantic meaning
+        }
+
+
+      long stime2 = System.nanoTime();
+
+      if(!input.hasNextInt()) {
+        long endtime2 = System.nanoTime();
+        System.out.println("excluding IO: " + ((endtime2 - stime2)/1000000) );
+      }
+
+
+      for(int i=0; i < trajectories.size(); i += 2) {
+        List<Double> currentScores = new ArrayList<Double>();
+        for(int j=0; j < trajectories.size(); j += 2) {
+          if(i != j) {
+            simUser = simScorePair(trajectories.get(i), trajectories.get(i+1), trajectories.get(j), trajectories.get(j+1), lvl);
+            currentScores.add(simUser);
+          }
+        }
+        Double[] currentScoresArray = currentScores.toArray(new Double[currentScores.size()]);
+        scores.add(currentScoresArray);
+      }
+
+
+      input.close();
+      long endtime = System.nanoTime();
+
+      System.out.println("entire program: " + ((endtime - starttime)/1000000));
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+  }
+
+  public static double simScorePair(double[] p1, double[] t1, double[] p2, double[] t2, int lvl) {
+
     double simsqscore=0;
     double simUser = 0;
-
-    intsemtreeNode root = new intsemtreeNode(10);
-
-    intsemtreeNode c1d1 = new intsemtreeNode(11); //food
-    intsemtreeNode c2d1 = new intsemtreeNode(12); //activity
-
-    intsemtreeNode c1d2 = new intsemtreeNode(1); //McDon
-    intsemtreeNode c2d2 = new intsemtreeNode(2); //TacoBell
-    intsemtreeNode c3d2 = new intsemtreeNode(3); //DQ
-    intsemtreeNode c4d2 = new intsemtreeNode(4); //park
-    intsemtreeNode c5d2 = new intsemtreeNode(5); //trail
-
-
-    root.addChild(c1d1);
-    root.addChild(c2d1);
-
-    c1d1.addChild(c1d2);
-    c1d1.addChild(c2d2);
-    c1d1.addChild(c3d2);
-
-    c2d1.addChild(c4d2);
-    c2d1.addChild(c5d2);
-
-    weightFunc(lvl);
-
-
-    //possible string tree.
-    //for now implemented with int tree representing strings
-    //Creating static constant meaning tree
-    /*
-    semtreeNode root = new semtreeNode("root");
-
-    semtreeNode c1d1 = new semtreeNode("home");
-    semtreeNode c2d1 = new semtreeNode("Food");
-    semtreeNode c3d1 = new semtreeNode("Outdoor activity");
-    semtreeNode c4d1 = new semtreeNode("School");
-    semtreeNode c5d1 = new semtreeNode("store");
-
-    semtreeNode c1d2 = new semtreeNode("McDon");
-    semtreeNode c2d2 = new semtreeNode("DQ");
-    semtreeNode c3d2 = new semtreeNode("TacoBell");
-    semtreeNode c4d2 = new semtreeNode("Park");
-    semtreeNode c5d2 = new semtreeNode("Trail");
-    semtreeNode c6d2 = new semtreeNode("RollaHigh");
-    semtreeNode c7d2 = new semtreeNode("MST");
-    semtreeNode c8d2 = new semtreeNode("walmart");
-    semtreeNode c9d2 = new semtreeNode("Kmart");
-    semtreeNode c10d2 = new semtreeNode("foodstores");
-
-    semtreeNode c1d3 = new semtreeNode("aldi");
-    semtreeNode c2d3 = new semtreeNode("kroger");
-
-    root.addChild(c1d1);
-    root.addChild(c2d1);
-    root.addChild(c3d1);
-    root.addChild(c4d1);
-    root.addChild(c5d1);
-
-    c2d1.addChild(c1d2);
-    c2d1.addChild(c2d2);
-    c2d1.addChild(c3d2);
-    c3d1.addChild(c4d2);
-    c3d1.addChild(c5d2);
-    c4d1.addChild(c6d2);
-    c4d1.addChild(c7d2);
-    c5d1.addChild(c8d2);
-    c5d1.addChild(c9d2);
-    c5d1.addChild(c10d2);
-
-    c10d2.addChild(c1d3);
-    c10d2.addChild(c2d3);
-    */
-
-    //READING IN DATA
-
-    while(input.hasNextInt()) {
-      int linelen = input.nextInt();
-      int[] p1 = new int[linelen];
-      for(int i = 0; i < linelen; i++) {
-        p1[i] = input.nextInt();
-      }
-      int linelen2 = input.nextInt();
-      double[] t1 = new double[linelen2];
-      for(int i = 0; i < linelen2; i++) {
-        t1[i] = input.nextDouble();
-      }
-      int linelen3 = input.nextInt();
-      int[] p2 = new int[linelen3];
-      for(int i = 0; i < linelen3; i++) {
-        p2[i] = input.nextInt();
-      }
-      int linelen4 = input.nextInt();
-      double[] t2 = new double[linelen4];
-      for(int i = 0; i < linelen4; i++) {
-        t2[i] = input.nextDouble();
-      }
-
-    //outputting 2 different test sequences
-      System.out.println("person1 locations&staytimes");
-    for(int i = 0; i < p1.length; i++) {
-      System.out.print(p1[i] + " ");
-    }
-    System.out.println();
-
-    for(int i = 0; i < t1.length; i++) {
-      System.out.print(t1[i] + " ");
-    }
-    System.out.println();
-
-    System.out.println("person2 location&staytimes");
-
-    for(int i = 0; i < p2.length; i++) {
-      System.out.print(p2[i] + " ");
-    }
-    System.out.println();
-
-    for(int i = 0; i < t2.length; i++) {
-      System.out.print(t2[i] + " ");
-    }
-    System.out.println();
-
     int[] shiftp1 = new int[p1.length];
     int[] shiftp2 = new int[p2.length];
-
-
-
-
-
-    //list of matches (nodes for graphs)
-    //for each layer of semantic meaning
-
-    long stime2 = System.nanoTime();
 
     for (int m=0; m < lvl; m++) {
         System.out.println("LEVEL " + (lvl-m));
@@ -204,6 +173,7 @@ public class simCompare {
         }
 
         //create adjacency matrix to store graph
+        //if no matches adds a 0 to avoid index out of bounds
         if(matches.size() == 0) {
           int[] fakedata = {0,0,0};
           matches.add(fakedata);
@@ -257,50 +227,31 @@ public class simCompare {
 
 
 
-        if(maxMatches.size() > 1) {
-          int totalsize = 0;
-          for (int j=1; j < maxMatches.size(); j++) {
-            totalsize += maxMatches.get(j-1).size();
-            for (int i=0; i < totalsize;i++) {
-              maxMatches.get(j).remove(0);
+          if(maxMatches.size() > 1) {
+            int totalsize = 0;
+            for (int j=1; j < maxMatches.size(); j++) {
+              totalsize += maxMatches.get(j-1).size();
+              for (int i=0; i < totalsize;i++) {
+                maxMatches.get(j).remove(0);
+              }
             }
           }
+
+          System.out.println(maxMatches);
+
+          double sgscore = 0;
+
+          sgscore = simScore(maxMatches);
+
+          simsqscore = sgscore / (double)(p1.length * p2.length);
+
+          simUser += weightFunc(lvl-m) * simsqscore;
+
         }
 
-        System.out.println(maxMatches);
+    System.out.println(simUser);
+    System.out.println(simUser/(simUser+1)); //normalized score
 
-        double sgscore = 0;
-
-        sgscore = simScore(maxMatches);
-
-        simsqscore = sgscore / (double)(p1.length * p2.length);
-
-        simUser += weightFunc(lvl-m) * simsqscore;
-
-        }
-
-        System.out.println(simUser);
-        System.out.println(simUser/(simUser+1)); //normalized score
-
-        if(!input.hasNextInt()) {
-          long endtime2 = System.nanoTime();
-          System.out.println("excluding IO: " + ((endtime2 - stime2)/1000000) );
-        }
-      }
-
-    input.close();
-    long endtime = System.nanoTime();
-
-    System.out.println("entire program: " + ((endtime - starttime)/1000000));
-
-  } catch (Exception ex) {
-    ex.printStackTrace();
-  }
-
-  }
-
-  public static double simScorePair() {
-    double simUser = 0;
 
     return simUser;
   }
@@ -351,8 +302,8 @@ public class simCompare {
 
   //currently hard coded. Need to implement a search by value in tree
 
-  public static int[] levelShift(int[] ogPers) {
-    int[] shiftPers = new int[ogPers.length];
+  public static double[] levelShift(double[] ogPers) {
+    double[] shiftPers = new double[ogPers.length];
 
     for (int i=0; i < ogPers.length; i++) {
       if(ogPers[i] == 1 || ogPers[i] == 2 || ogPers[i] == 3) {
